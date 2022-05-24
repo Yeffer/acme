@@ -5,10 +5,10 @@
 <div class="container">
 <br>
 <div class="card">
-  	<div class="card-header">NUEVO PROPIETARIO</div>
+  	<div class="card-header">EDITAR CONDUCTOR</div>
  		<div class="card-body">
-			<form class="form-horizontal" id="clienteForm" method="POST" action="{{ route('propietarios.store') }}">
-				@csrf
+			<form class="form-horizontal" id="clienteForm" method="POST" action="{{ route('conductores.update', $conductores->id) }}">
+				@csrf @method('PATCH')
 				<div class="form-group row">
 			     	<label class="control-label col-sm-2" for="cedula">Cedula:</label>
 			    	<div class="col-sm-10">          
@@ -17,7 +17,7 @@
 				        	   id="cedula" 
 				        	   placeholder="Ingrese cedula" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{$conductores->cedula}}" 
 				        >
 				        {!! $errors->first('cedula', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -30,7 +30,7 @@
 				        	   id="primerNombre" 
 				        	   placeholder="Ingrese primer nombre" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{$conductores->primer_nombre}}" 
 				        >
 				        {!! $errors->first('primerNombre', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -43,7 +43,7 @@
 				        	   id="segundoNombre" 
 				        	   placeholder="Ingrese segundo nombre" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{$conductores->segundo_nombre}}" 
 				        >
 				        
 			      	</div>
@@ -56,7 +56,7 @@
 				        	   id="apellidos" 
 				        	   placeholder="Ingrese apellidos" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{$conductores->apellidos}}" 
 				        >
 				        {!! $errors->first('apellidos', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -69,7 +69,7 @@
 				        	   id="direccion" 
 				        	   placeholder="Ingrese dirección" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{$conductores->direccion}}" 
 				        >
 				        {!! $errors->first('direccion', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -82,7 +82,7 @@
 			        		   placeholder="Ingrese teléfono"
 			        		   name="telefono"
 			        		   class="form-control"
-			        		   value="">
+			        		   value="{{$conductores->telefono}}">
 			        	{!! $errors->first('telefono', '<small>:message</small><br>')  !!}
 			      	</div>
 			    </div>
@@ -103,62 +103,10 @@
 
 		    	<div class="form-group row">        
 		      		<div class="col-sm-offset-2 col-sm-10">
-		        		<button type="submit" class="btn btn-primary" id="registro">Nuevo</button>
+		        		<button type="submit" class="btn btn-primary" id="registro">Editar</button>
 		      		</div>
 		    	</div>
 		  	</form>
   		</div>
 	</div>	
-	
-
-	<br>	
-<div class="container">
-	<div class="card">
-	 	<div class="card-header">INFORMACIÓN DE PROPIETARIOS</div>
-	  	<div class="card-body">			
-		  	<table class='table table-hover table-striped'>
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Cedula</th>							
-						<th>Primer nombre</th>							
-						<th>Segundo nombre</th>
-						<th>Apellidos</th>						
-						<th>Dirección</th>
-						<th>Teléfono</th>						
-						<th>Ciudad</th>							
-					</tr>
-				</thead>
-				<tbody>						
-					@forelse($propietarios as $propietarioItem)
-						<tr>							
-							<td>{{ $propietarioItem->id }}</td>
-							<td>{{ $propietarioItem->cedula }}</td>
-							<td>{{ $propietarioItem->primer_nombre }}</td>								
-							<td>{{ $propietarioItem->segundo_nombre }}</td>
-							<td>{{ $propietarioItem->apellidos }}</td>
-							<td>{{ $propietarioItem->direccion }}</td>
-							<td>{{ $propietarioItem->telefono }}</td>
-							<td>{{ $propietarioItem->ciudad }}</td>									
-							<td>
-								<a href="{{ route('propietarios.edit', $propietarioItem->id ) }}"><button class='btn btn-success btn-sm'>Editar</button></a>
-							</td>
-							<td>								
-								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $propietarioItem->id }}">
-									  Eliminar
-								</button>										
-							</td>
-						</tr>										
-					@include('propietarios.delete')
-					@empty
-						<td>No hay registros para mostrar</td>													
-					@endforelse	
-				</tbody>
-			</table>
-	    </div>
-  	</div>
-</div>
-<br>
-<br>
-<br>
 @endsection

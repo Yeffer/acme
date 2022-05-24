@@ -27,8 +27,14 @@ class VehiculoController extends Controller
     {        
         $propietarios = Propietarios::select('Propietarios.id','Propietarios.primer_nombre')->get();
         $conductores = Conductores::select('Conductores.id','Conductores.primer_nombre')->get();
+
+        $vehiculos = DB::table('vehiculos')
+                    ->join('conductores', 'vehiculos.conductor_id', '=', 'conductores.id')                    
+                    ->join('propietarios', 'vehiculos.propietario_id', '=', 'propietarios.id')
+                    ->select('vehiculos.id','vehiculos.placa','vehiculos.color','vehiculos.marca','vehiculos.tipo','propietarios.primer_nombre AS propietario','conductores.primer_nombre AS conductor')
+                    ->get();    
         
-        return view('vehiculos/crear', compact('propietarios', 'conductores'));      
+        return view('vehiculos/crear', compact('vehiculos', 'conductores', 'propietarios'));      
     }
 
     /**
@@ -57,7 +63,7 @@ class VehiculoController extends Controller
             'propietario_id' =>  request('propietario'),        
         ]);
 
-        return redirect()->route('home');        
+        return redirect()->route('home');    
     }
 
     /**
@@ -79,7 +85,12 @@ class VehiculoController extends Controller
      */
     public function edit($id)
     {
-        
+        $vehiculos = Vehiculos::findOrFail($id);        
+        $conductores = Conductores::select('Conductores.id','Conductores.primer_nombre')->get();
+
+        $propietarios = Propietarios::select('Propietarios.id','Propietarios.primer_nombre')->get();
+
+        return view('vehiculos.editar', compact('vehiculos', 'conductores', 'propietarios'));   
     }
 
     /**
@@ -91,7 +102,36 @@ class VehiculoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        request()->validate([
+            'placa' => 'required',
+            'color' => 'required',            
+            'marca' => 'required', 
+            'tipo' => 'required',            
+            'conductor' => 'required',
+            'propietario' => 'required'            
+        ]);
+
+        $vehiculos = Vehiculos::findOrFail($id);
+
+        $vehiculos->update([
+            'placa' => request('placa'),
+            'color' => request('color'),
+            'marca' => request('marca'),
+            'tipo' => request('tipo'),
+            'conductor_id' => request('conductor'),
+            'propietario_id' =>  request('propietario'),
+        ]); 
         
+        $propietarios = Propietarios::select('Propietarios.id','Propietarios.primer_nombre')->get();
+        $conductores = Conductores::select('Conductores.id','Conductores.primer_nombre')->get();
+
+        $vehiculos = DB::table('vehiculos')
+                    ->join('conductores', 'vehiculos.conductor_id', '=', 'conductores.id')                    
+                    ->join('propietarios', 'vehiculos.propietario_id', '=', 'propietarios.id')
+                    ->select('vehiculos.id','vehiculos.placa','vehiculos.color','vehiculos.marca','vehiculos.tipo','propietarios.primer_nombre AS propietario','conductores.primer_nombre AS conductor')
+                    ->get();    
+        
+        return view('vehiculos/crear', compact('vehiculos', 'conductores', 'propietarios'));  
     }
 
     /**
@@ -102,6 +142,18 @@ class VehiculoController extends Controller
      */
     public function destroy($id)
     {
+        $vehiculos = Vehiculos::findOrFail($id);
+        $vehiculos->delete();
+
+        $propietarios = Propietarios::select('Propietarios.id','Propietarios.primer_nombre')->get();
+        $conductores = Conductores::select('Conductores.id','Conductores.primer_nombre')->get();
+
+        $vehiculos = DB::table('vehiculos')
+                    ->join('conductores', 'vehiculos.conductor_id', '=', 'conductores.id')                    
+                    ->join('propietarios', 'vehiculos.propietario_id', '=', 'propietarios.id')
+                    ->select('vehiculos.id','vehiculos.placa','vehiculos.color','vehiculos.marca','vehiculos.tipo','propietarios.primer_nombre AS propietario','conductores.primer_nombre AS conductor')
+                    ->get();    
         
+        return view('vehiculos/crear', compact('vehiculos', 'conductores', 'propietarios'));  
     }
 }

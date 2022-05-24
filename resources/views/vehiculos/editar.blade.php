@@ -5,10 +5,10 @@
 <div class="container" id="productos">
 <br>
 <div class="card">
-  	<div class="card-header">NUEVO VEHICULO</div>
+  	<div class="card-header">EDITAR VEHICULO</div>
  		<div class="card-body">
-			<form class="form-horizontal" id="clienteForm" method="POST" action="{{ route('vehiculos.store') }}">
-				@csrf
+			<form class="form-horizontal" id="clienteForm" method="POST" action="{{ route('vehiculos.update', $vehiculos->id) }}">
+				@csrf @method('PATCH')
 				<div class="form-group row">
 			     	<label class="control-label col-sm-2" for="placa">Placa:</label>
 			    	<div class="col-sm-10">          
@@ -17,7 +17,7 @@
 				        	   id="placa" 
 				        	   placeholder="Ingrese placa" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{ $vehiculos->placa }}" 
 				        >
 				        {!! $errors->first('placa', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -30,7 +30,7 @@
 				        	   id="color" 
 				        	   placeholder="Ingrese color" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{ $vehiculos->color }}" 
 				        >
 				        {!! $errors->first('color', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -43,7 +43,7 @@
 				        	   id="marca" 
 				        	   placeholder="Ingrese marca" 
 				        	   class="form-control" 
-				        	   value="" 
+				        	   value="{{ $vehiculos->marca }}" 
 				        >
 				        {!! $errors->first('marca', '<small>:message</small><br>')  !!}
 			      	</div>
@@ -90,59 +90,10 @@
 
 		    	<div class="form-group row">        
 		      		<div class="col-sm-offset-2 col-sm-10">
-		        		<button type="submit" class="btn btn-primary" id="registro">Nuevo</button>
+		        		<button type="submit" class="btn btn-primary" id="registro">Actualizar</button>
 		      		</div>
 		    	</div>
 		  	</form>
   		</div>
 	</div>
-
-	<br>	
-<div class="container">
-	<div class="card">
-	 	<div class="card-header">INFORMACIÓN DE VEHICULO</div>
-	  	<div class="card-body">			
-		  	<table class='table table-hover table-striped'>
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Placa</th>							
-						<th>Color</th>							
-						<th>Marca</th>
-						<th>Tipo</th>						
-						<th>Conductor</th>
-						<th>Propietario</th>					
-					</tr>
-				</thead>
-				<tbody>						
-					@forelse($vehiculos as $vehiculoItem)
-						<tr>							
-							<td>{{ $vehiculoItem->id }}</td>
-							<td>{{ $vehiculoItem->placa }}</td>
-							<td>{{ $vehiculoItem->color }}</td>								
-							<td>{{ $vehiculoItem->marca }}</td>
-							<td>{{ $vehiculoItem->tipo }}</td>
-							<td>{{ $vehiculoItem->conductor }}</td>
-							<td>{{ $vehiculoItem->propietario }}</td>								
-							<td>
-								<a href="{{ route('vehiculos.edit', $vehiculoItem->id ) }}"><button class='btn btn-success btn-sm'>Editar</button></a>
-							</td>
-							<td>								
-								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $vehiculoItem->id }}">
-									  Eliminar
-								</button>										
-							</td>
-						</tr>										
-					@include('vehiculos.delete')
-					@empty
-						<td>No hay registros para mostrar</td>													
-					@endforelse	
-				</tbody>
-			</table>
-	    </div>
-  	</div>
-</div>
-<br>
-<br>
-<br>
 @endsection

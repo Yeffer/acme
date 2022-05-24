@@ -109,4 +109,52 @@
 		  	</form>
   		</div>
 	</div>
+<br>	
+<div class="container">
+	<div class="card">
+	 	<div class="card-header">INFORMACIÓN DE CONDUCTOR</div>
+	  	<div class="card-body">			
+		  	<table class='table table-hover table-striped'>
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Cedula</th>							
+						<th>Primer nombre</th>							
+						<th>Segundo nombre</th>
+						<th>Apellidos</th>						
+						<th>Dirección</th>
+						<th>Teléfono</th>						
+						<th>Ciudad</th>							
+					</tr>
+				</thead>
+				<tbody>						
+					@forelse($conductores as $conductorItem)
+						<tr>							
+							<td>{{ $conductorItem->id }}</td>
+							<td>{{ $conductorItem->cedula }}</td>
+							<td>{{ $conductorItem->primer_nombre }}</td>								
+							<td>{{ $conductorItem->segundo_nombre }}</td>
+							<td>{{ $conductorItem->apellidos }}</td>
+							<td>{{ $conductorItem->direccion }}</td>
+							<td>{{ $conductorItem->telefono }}</td>
+							<td>{{ $conductorItem->ciudad }}</td>									
+							<td>
+								<a href="{{ route('conductores.edit', $conductorItem->id ) }}"><button class='btn btn-success btn-sm'>Editar</button></a>
+							</td>
+							<td>								
+								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $conductorItem->id }}">Eliminar</button>
+							</td>
+						</tr>	
+					@include('conductores.delete')									
+					@empty
+						<td>No hay registros para mostrar</td>													
+					@endforelse	
+				</tbody>
+			</table>
+	    </div>
+  	</div>
+</div>
+<br>
+<br>
+<br>
 @endsection

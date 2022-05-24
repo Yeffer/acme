@@ -25,8 +25,13 @@ class ConductorController extends Controller
     public function create()
     {        
         $ciudades = Ciudades::select('Ciudades.id','Ciudades.ciudad')->get();
+         
+        $conductores = DB::table('conductores')
+                    ->join('ciudades', 'ciudades.id', '=', 'conductores.ciudad_id')                    
+                    ->select('conductores.id','conductores.cedula','conductores.primer_nombre','conductores.segundo_nombre','conductores.apellidos','conductores.direccion','conductores.telefono','ciudades.ciudad')
+                    ->get();    
         
-        return view('conductores/crear', compact('ciudades'));        
+        return view('conductores/crear', compact('ciudades','conductores'));      
     }
 
     /**
@@ -79,7 +84,10 @@ class ConductorController extends Controller
      */
     public function edit($id)
     {
+        $conductores = Conductores::findOrFail($id);        
+        $ciudades = Ciudades::select('Ciudades.id','Ciudades.ciudad')->get();
         
+        return view('conductores.editar', compact('conductores', 'ciudades'));   
     }
 
     /**
@@ -91,7 +99,36 @@ class ConductorController extends Controller
      */
     public function update(Request $request, $id)
     {
+         request()->validate([
+            'cedula' => 'required',
+            'primerNombre' => 'required',            
+            'apellidos' => 'required', 
+            'direccion' => 'required',            
+            'telefono' => 'required',
+            'ciudad' => 'required'            
+        ]);
+
+
+        $conductores = Conductores::findOrFail($id);
         
+        $conductores->update([
+            'cedula' => request('cedula'),
+            'primer_nombre' => request('primerNombre'),
+            'segundo_nombre' => request('segundoNombre'),
+            'apellidos' => request('apellidos'),
+            'direccion' => request('direccion'),
+            'telefono' =>  request('telefono'),
+            'ciudad_id' =>  request('ciudad'), 
+        ]); 
+
+        $ciudades = Ciudades::select('Ciudades.id','Ciudades.ciudad')->get();
+         
+        $conductores = DB::table('conductores')
+                    ->join('ciudades', 'ciudades.id', '=', 'conductores.ciudad_id')                    
+                    ->select('conductores.id','conductores.cedula','conductores.primer_nombre','conductores.segundo_nombre','conductores.apellidos','conductores.direccion','conductores.telefono','ciudades.ciudad')
+                    ->get();    
+        
+        return view('conductores.crear', compact('ciudades','conductores'));  
     }
 
     /**
@@ -102,6 +139,16 @@ class ConductorController extends Controller
      */
     public function destroy($id)
     {
+        $conductores = Conductores::findOrFail($id);
+        $conductores->delete();
+
+        $ciudades = Ciudades::select('Ciudades.id','Ciudades.ciudad')->get();
+         
+        $conductores = DB::table('conductores')
+                    ->join('ciudades', 'ciudades.id', '=', 'conductores.ciudad_id')                    
+                    ->select('conductores.id','conductores.cedula','conductores.primer_nombre','conductores.segundo_nombre','conductores.apellidos','conductores.direccion','conductores.telefono','ciudades.ciudad')
+                    ->get();      
         
+        return view('conductores.crear', compact('ciudades','conductores'));  
     }
 }
